@@ -1,0 +1,32 @@
+name: Build qBittorrent
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential qt5-default qt5-qmake qtbase5-dev-tools qttools5-dev-tools libboost-dev libboost-system-dev libboost-filesystem-dev libboost-program-options-dev libboost-thread-dev libssl-dev
+
+    - name: Configure qBittorrent
+      run: |
+        cd qBittorrent
+        qmake
+
+    - name: Build qBittorrent
+      run: |
+        cd qBittorrent
+        make -j$(nproc)
